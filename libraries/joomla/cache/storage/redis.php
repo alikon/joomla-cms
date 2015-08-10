@@ -57,7 +57,7 @@ class JCacheStorageRedis extends JCacheStorage
 		$config   = JFactory::getConfig();
 		$lifetime = (int) $config->get('cachetime', 15);	
 
-		//Lifetime to seconds
+		// Lifetime to seconds
 		$ds->setex($cache_id, $lifetime * 60, $data);
 
 		return true;
