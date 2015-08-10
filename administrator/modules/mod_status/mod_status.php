@@ -12,14 +12,14 @@ defined('_JEXEC') or die;
 // Include the helper functions only once
 require_once __DIR__ . '/helper.php';
 
-$config	= JFactory::getConfig();
+$config = JFactory::getConfig();
 $user   = JFactory::getUser();
 $db     = JFactory::getDbo();
 $lang   = JFactory::getLanguage();
 $input  = JFactory::getApplication()->input;
 
 // Get the number of unread messages in your inbox.
-$query	= $db->getQuery(true)
+$query = $db->getQuery(true)
 	->select('COUNT(*)')
 	->from('#__messages')
 	->where('state = 0 AND user_id_to = ' . (int) $user->get('id'));
