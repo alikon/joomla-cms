@@ -61,13 +61,11 @@ class PlgUserJoomla extends JPlugin
 		{
 			case 'database':
 			case 'none':
-					$results=$this->deleteUserSessionFromDb();
-					break;
-			case 'redis':
-			
-			$results=$this->deleteUserSessionFromRedis();
+				$results = $this->deleteUserSessionFromDb();
 				break;
-				
+			case 'redis':
+				$results = $this->deleteUserSessionFromRedis();
+				break;
 			default:
 				break;
 		}
@@ -78,7 +76,7 @@ class PlgUserJoomla extends JPlugin
 
 	public function deleteUserSessionFromDb()
 	{
-			$query = $this->db->getQuery(true)
+		$query = $this->db->getQuery(true)
 			->delete($this->db->quoteName('#__session'))
 			->where($this->db->quoteName('userid') . ' = ' . (int) $user['id']);
 
@@ -96,14 +94,12 @@ class PlgUserJoomla extends JPlugin
 
 	public function deleteUserSessionFromRedis()
 	{
-		$ds = JFactory::getDso();
-
+		$ds             = JFactory::getDso();
 		$key4sessionuid = 'sessid-' . (int) $user->get('id') . '-' . (int) JFactory::getApplication()->getClientId();
-
-		$key = $ds->get($key4sessionuid);
 
 		try
 		{
+			$key = $ds->get($key4sessionuid);
 			$ds->delete($key);
 			$ds->delete($key4sessionuid);
 		}
