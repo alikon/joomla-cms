@@ -164,11 +164,11 @@ class JApplicationCms extends JApplicationWeb
 	{
 		if ($this->config->get('session_handler') == 'redis')
 		{
-			$this->checkSessionNoDb();
+			$this->checkSessionRedis();
 		}
 		else
 		{
-			$this->checkSessionDb();
+			$this->checkSessionDatabase();
 			 
 		}
 	}
@@ -184,7 +184,7 @@ class JApplicationCms extends JApplicationWeb
 	 * @since   3.5
 	 * @throws  Exception or RuntimeException
 	 */
-	public function checkSessionNoDb()
+	public function checkSessionRedis()
 	{ 
 		$ds      = JFactory::getDso();
 		$session = JFactory::getSession();
@@ -257,7 +257,7 @@ class JApplicationCms extends JApplicationWeb
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	public function checkSessionDb()
+	public function checkSessionDatabase()
 	{
 		$db      = JFactory::getDbo();
 		$session = JFactory::getSession();
