@@ -121,6 +121,13 @@ class JCacheStorageRedis extends JCacheStorage
 		return true;
 	}
 
+	/**
+	 * Test to see if the cache storage is available.	 
+	 *
+	 * @return  boolean  True on success, false otherwise.
+	 *
+	 * @since   3.4
+	 */
 	public static function isSupported()
 	{	
 		return class_exists('redis');
