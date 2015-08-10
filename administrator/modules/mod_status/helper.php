@@ -19,7 +19,7 @@ class ModStatusHelper
 	/**
 	 * The count of logged users from the Database.
 	 *
-	 * @param   $admin   boolean  True if we want the backend user.
+	 * @param   boolean  $admin  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
@@ -51,7 +51,7 @@ class ModStatusHelper
 	/**
 	 * The count of logged users from the Redis Cache.
 	 *
-	 * @param   $admin   boolean  True if we want the backend user.
+	 * @param   boolean  $admin  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
@@ -99,7 +99,7 @@ class ModStatusHelper
 
 			foreach ($results as $k)
 			{
-				if ((int)$results[$k]->client_id == 1)
+				if ((int) $results[$k]->client_id == 1)
 				{
 					$backend_users++;
 				}
@@ -112,15 +112,15 @@ class ModStatusHelper
 	/**
 	 * The count of logged users.
 	 *
-	 * @param   $admin   boolean  True if we want the backend user.
+	 * @param   boolean  $admin  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
 	 * @since   3.5
 	 */
-	public static function getOnlineCount($admin)
+	public function getOnlineCount($admin)
 	{
- 			$config  = JFactory::getConfig();
+			$config  = JFactory::getConfig();
 			$handler = $config->get('session_handler', 'none');
 			$results = null;
 
