@@ -29,13 +29,13 @@ class JSessionStorageRedis extends JSessionStorage
 	 */
 	public function read($id)
 	{
- 		// Get the databstore connection object and verify its connected.
+		// Get the databstore connection object and verify its connected.
 		$ds = JFactory::getDso();
 
 		try
 		{
-			// Get the session data from the datastore.	
-			$data   = $ds->get('sess-' . $id);  		  
+			// Get the session data from the datastore.
+			$data   = $ds->get('sess-' . $id);
 			$result = json_decode($data);
 			$result = str_replace('\0\0\0', chr(0) . '*' . chr(0), $result);
 
@@ -46,7 +46,6 @@ class JSessionStorageRedis extends JSessionStorage
 			throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_READ'));
 			return false;
 		}
-	 
 	}
 
 	/**
@@ -75,11 +74,11 @@ class JSessionStorageRedis extends JSessionStorage
 		$lifetime = ((JFactory::getConfig()->get('lifetime')) ? JFactory::getConfig()->get('lifetime') * 60 : 900);
 
 		try
-		{   
-			$ds->setex( $key, $lifetime, $jsonValue );
+		{
+			$ds->setex($key, $lifetime, $jsonValue);
 
 			if ($user->get('id') > 0)
-			{ 
+			{
 				$hash = array(
 					'client_id' => (int) JFactory::getApplication()->getClientId(),
 					'guest' => $db->quote($user->get('guest')),
@@ -93,7 +92,7 @@ class JSessionStorageRedis extends JSessionStorage
 				$ds->setex($key_uname, $lifetime, $jsonValue);
 				$ds->setex($user->username, $lifetime, $user->id);
 				$ds->setex($user->id, $lifetime, $user->username);
-				$ds->sadd('utenti', $user->username );
+				$ds->sadd('utenti', $user->username);
 			}
 
 			return true;
@@ -147,7 +146,6 @@ class JSessionStorageRedis extends JSessionStorage
 		try
 		{
 			$lista = $ds->smembers('utenti');
-		
 		}
 		catch (Exception $e)
 		{
@@ -173,7 +171,7 @@ class JSessionStorageRedis extends JSessionStorage
 		if ($exist == -1)
 		{
 			$ds->srem('utenti', $elm);
-			$ds->delete('user-'.$elm);
+			$ds->delete('user-' . $elm);
 		}
 	}
 }
