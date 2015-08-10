@@ -19,7 +19,7 @@ abstract class ModLoggedHelper
 	/**
 	 * Get a list of logged users.
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  The module parameters.
+	 * @param   \Joomla\Registry\Registry  $params  The module parameters.
 	 *
 	 * @return  mixed  An array of users, or false on error.
 	 *
@@ -27,7 +27,7 @@ abstract class ModLoggedHelper
 	 */
 	public static function getList($params)
 	{
- 		$config  = JFactory::getConfig();
+		$config  = JFactory::getConfig();
 		$handler = $config->get('session_handler', 'none');
 		$results = null;
 
@@ -35,13 +35,13 @@ abstract class ModLoggedHelper
 		{
 			case 'database':
 			case 'none':
-				$results = $this->getListFromDb($params);
+				$results = self::getListFromDb($params);
 				break;
 			case 'redis':
-				$results = $this->getListFromRedis($params);
+				$results = self::getListFromRedis($params);
 				break;
-			default:	   		  			
-				break;		
+			default:
+				break;
 		}
 
 		return $results;
@@ -50,14 +50,14 @@ abstract class ModLoggedHelper
 	/**
 	 * Get a list of logged users from the Database.
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  The module parameters.
+	 * @param   \Joomla\Registry\Registry  $params  The module parameters.
 	 *
 	 * @return  mixed  An array of users, or false on error.
 	 *
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	private function getListFromDb(&$params)
+	private static function getListFromDb($params)
 	{
 		$db    = JFactory::getDbo();
 		$user  = JFactory::getUser();
@@ -99,14 +99,14 @@ abstract class ModLoggedHelper
 	/**
 	 * Get a list of logged users from the Redis Cache.
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  The module parameters.
+	 * @param   \Joomla\Registry\Registry  $params  The module parameters.
 	 *
 	 * @return  mixed  An array of users, or false on error.
 	 *
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	private function getListFromRedis($params)
+	private static function getListFromRedis($params)
 	{
 		$ds      = JFactory::getDso();
 		$user    = JFactory::getUser();
@@ -114,7 +114,7 @@ abstract class ModLoggedHelper
 
 		try
 		{
-			$lista = $ds->smembers('utenti');		
+			$lista = $ds->smembers('utenti');
 		}
 		catch (Exception $e)
 		{
@@ -134,7 +134,7 @@ abstract class ModLoggedHelper
 			{
 				throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_DESTROY'));
 
-				return false;		
+				return false;
 			}
 
 			$data      = json_decode($exist);
