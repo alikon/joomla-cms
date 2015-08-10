@@ -73,7 +73,13 @@ class PlgUserJoomla extends JPlugin
 		return $results;
 	}
 
-
+	/**
+	 * Method to delete the user session from the database
+	 *
+	 * @return  boolean  True on success else false
+	 *
+	 * @since   3.5
+	 */
 	public function deleteUserSessionFromDb()
 	{
 		$query = $this->db->getQuery(true)
@@ -92,6 +98,13 @@ class PlgUserJoomla extends JPlugin
 		return true;
 	}
 
+	/**
+	 * Method to delete the user session from redis
+	 *
+	 * @return  boolean  True on success else false
+	 *
+	 * @since   3.5
+	 */
 	public function deleteUserSessionFromRedis()
 	{
 		$ds             = JFactory::getDso();
@@ -279,6 +292,13 @@ class PlgUserJoomla extends JPlugin
 		return $results;
 	}
 
+	/**
+	 * Update the user related fields for the Joomla sessions table
+	 *
+	 * @return  boolean  True on success else false
+	 *
+	 * @since   3.5
+	 */
 	public function loginUserFromDb($instance, $session)
 	{
 		// Update the user related fields for the Joomla sessions table.
@@ -288,7 +308,8 @@ class PlgUserJoomla extends JPlugin
 			->set($this->db->quoteName('username') . ' = ' . $this->db->quote($instance->username))
 			->set($this->db->quoteName('userid') . ' = ' . (int) $instance->id)
 			->where($this->db->quoteName('session_id') . ' = ' . $this->db->quote($session->getId()));
-		try
+
+			try
 		{
 			$this->db->setQuery($query)->execute();
 		}
@@ -299,17 +320,24 @@ class PlgUserJoomla extends JPlugin
 
 		return true;
 	}
-	
+
+	/**
+	 * Update the user related fields for redis
+	 *
+	 * @return  boolean  True on success else false
+	 *
+	 * @since   3.5
+	 */
 	public function loginUserFromRedis($instance, $session)
 	{
 		$ds = JFactory::getDso();
 		
 		$hash = array(
 			'client_id' => (int) $this->app->getClientId(),
-			'guest'     => $this->db->quote($instance->guest), 
-			'time'      => (int) $session->get('session.timer.start'), 
+			'guest'     => $this->db->quote($instance->guest),
+			'time'      => (int) $session->get('session.timer.start'),
 			'userid'    => (int) $instance->id,
-			'username'  => $this->db->quote($instance->username)
+			'username'  => $this->db->quote($instance->username),
 		);
 
 		$jsonValue = json_encode($hash);
@@ -382,17 +410,20 @@ class PlgUserJoomla extends JPlugin
 					
 				default:
 					break;
-				} 
 			}
 
 			return $results;
+		}
+
+		return true;
+
 	}
 
 	/**
 	 * This method will logout a user session from the Database
 	 *
-	 * @param   array    $user     Holds the user data.
-	 * @param   array    $options  Array holding options (remember, autoregister, group).
+	 * @param   array  $user     Holds the user data.
+	 * @param   array  $options  Array holding options (remember, autoregister, group).
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -420,8 +451,8 @@ class PlgUserJoomla extends JPlugin
 	/**
 	 * This method will logout a user session from Redis
 	 *
-	 * @param   array    $user     Holds the user data.
-	 * @param   array    $options  Array holding options (remember, autoregister, group).
+	 * @param   array  $user     Holds the user data.
+	 * @param   array  $options  Array holding options (remember, autoregister, group).
 	 *
 	 * @return  boolean  True on success
 	 *
@@ -440,7 +471,7 @@ class PlgUserJoomla extends JPlugin
 			$ds->delete($user['id']);
 			$ds->delete($user['username']);
 			$ds->delete('user-' . $user['username']);
-			$ds->srem( 'utenti', $user['username'] );
+			$ds->srem('utenti', $user['username']);
 		}
 		catch (RuntimeException $e)
 		{
