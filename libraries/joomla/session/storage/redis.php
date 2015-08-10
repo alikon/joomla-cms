@@ -81,11 +81,11 @@ class JSessionStorageRedis extends JSessionStorage
 			if ($user->get('id') > 0)
 			{ 
 				$hash = array(
-						'client_id' => (int) JFactory::getApplication()->getClientId(),
-						'guest' => $db->quote($user->get('guest')),
-						'time' => (int) JFactory::getSession()->get('session.timer.start'),
-						'userid' => (int) $user->get('id'),
-						'username' => $db->quote($user->get('username')),
+					'client_id' => (int) JFactory::getApplication()->getClientId(),
+					'guest' => $db->quote($user->get('guest')),
+					'time' => (int) JFactory::getSession()->get('session.timer.start'),
+					'userid' => (int) $user->get('id'),
+					'username' => $db->quote($user->get('username')),
 				);
 
 				$jsonValue = json_encode($hash);
