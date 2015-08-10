@@ -169,7 +169,6 @@ class JApplicationCms extends JApplicationWeb
 		else
 		{
 			$this->checkSessionDatabase();
-			 
 		}
 	}
 
@@ -191,10 +190,10 @@ class JApplicationCms extends JApplicationWeb
 		$user    = JFactory::getUser();
 
 		try
-		{				
-			$exists = $ds->exists('sess-' . $session->getId());  
+		{
+			$exists = $ds->exists('sess-' . $session->getId());
 		}
-		catch( Exception $e)
+		catch (Exception $e)
 		{
 			$exists = false;
 			throw new Exception(JText::_('JERROR_SESSION_STARTUP'));
@@ -204,7 +203,7 @@ class JApplicationCms extends JApplicationWeb
 		{
 			if ($session->isNew())
 			{
-				$ds->delete('sess-' . $session->getId());  
+				$ds->delete('sess-' . $session->getId());
 				$hash = array(
 					'client_id' => (int) $this->getClientId(),
 					'time'      => (int) time(),
@@ -218,8 +217,7 @@ class JApplicationCms extends JApplicationWeb
 					'time'      => (int) $session->get('session.timer.start'),
 					'userid'    => (int) $user->get('id'),
 					'username'  => $user->get('username'),
-				);	
- 
+				);
 			}
 
 			// If the insert failed, exit the application.
@@ -231,7 +229,7 @@ class JApplicationCms extends JApplicationWeb
 			try
 			{
 				if (!$user->get('id') > 0)
-				{ 
+				{
 					$ds->setex($key4sessionuid, $lifetime, $key);
 				}
 				else
@@ -853,7 +851,6 @@ class JApplicationCms extends JApplicationWeb
 					$query = $db->getQuery(true)
 							->delete($db->quoteName('#__session'))
 							->where($db->quoteName('time') . ' < ' . $db->quote((int) ($time - $session->getExpire())));
-
 					$db->setQuery($query)->execute();
 				}
 
@@ -862,11 +859,11 @@ class JApplicationCms extends JApplicationWeb
 				// Pseudo cron task to clean SETS
 				$this->purgeSets();
 				break;
-			default:	
-				break;	
+			default:
+				break;
 		}
-					
-		if ($time % 2 || $session->isNew())			
+
+		if ($time % 2 || $session->isNew())
 		{
 			$this->checkSession();
 		}
@@ -1291,12 +1288,12 @@ class JApplicationCms extends JApplicationWeb
 			{
 				throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_DESTROY'));
 
-				return false;			
+				return false;
 			}
 
 			if ($exist == -1)
 			{
-				$ds->srem('utenti', $elm);	
+				$ds->srem('utenti', $elm);
 			}
 		}
 	}
