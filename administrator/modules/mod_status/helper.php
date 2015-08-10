@@ -25,7 +25,7 @@ class ModStatusHelper
 	 *
 	 * @since   3.5
 	 */
-	private function getOnlineCountFromDb($admin)
+	private static function getOnlineCountFromDb($admin)
 	{
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -57,7 +57,7 @@ class ModStatusHelper
 	 *
 	 * @since   3.5
 	 */
-	private function getOnlineCountFromRedis($admin)
+	private static function getOnlineCountFromRedis($admin)
 	{
 		// Get the number of frontend logged in users.
 		$ds = JFactory::getDso();
@@ -128,10 +128,10 @@ class ModStatusHelper
 			{
 				case 'database':
 				case 'none':
-					$results = $this->getOnlineCountFromDb($admin);
+					$results = self::getOnlineCountFromDb($admin);
 					break;
 				case 'redis':
-					$results = $this->getOnlineCountFromRedis($admin);
+					$results = self::getOnlineCountFromRedis($admin);
 					break;
 				default:
 					break;
