@@ -118,7 +118,7 @@ class ModStatusHelper
 	 *
 	 * @since   3.5
 	 */
-	public function getOnlineCount($admin)
+	public static function getOnlineCount($admin)
 	{
  			$config  = JFactory::getConfig();
 			$handler = $config->get('session_handler', 'none');
