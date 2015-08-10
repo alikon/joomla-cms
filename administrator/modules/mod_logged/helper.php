@@ -57,7 +57,7 @@ abstract class ModLoggedHelper
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	public static function getListFromDb(&$params)
+	private function getListFromDb(&$params)
 	{
 		$db    = JFactory::getDbo();
 		$user  = JFactory::getUser();
@@ -106,7 +106,7 @@ abstract class ModLoggedHelper
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	public static function getListFromFromRedis($params)
+	private function getListFromFromRedis($params)
 	{
 		$ds      = JFactory::getDso();
 		$user    = JFactory::getUser();
