@@ -374,10 +374,10 @@ class PlgUserJoomla extends JPlugin
 			{
 				case 'database':
 				case 'none':
-					$results = $this->logoutUserFromDb($user, $options);
+					$results = $this->logoutUserSessionFromDb($user, $options);
 					break;
 				case 'redis':
-					$results = $this->logoutUserFromRedis($user, $options);
+					$results = $this->logoutUserSessionFromRedis($user, $options);
 					break;
 					
 				default:
@@ -398,12 +398,12 @@ class PlgUserJoomla extends JPlugin
 	 *
 	 * @since   3.5
 	 */
-	private function logoutUserFromDb($user,$options)
+	private function logoutUserSessionFromDb($user,$options)
 	{
 		$query = $this->db->getQuery(true)
-				->delete($this->db->quoteName('#__session'))
-				->where($this->db->quoteName('userid') . ' = ' . (int) $user['id'])
-				->where($this->db->quoteName('client_id') . ' = ' . (int) $options['clientid']);
+			->delete($this->db->quoteName('#__session'))
+			->where($this->db->quoteName('userid') . ' = ' . (int) $user['id'])
+			->where($this->db->quoteName('client_id') . ' = ' . (int) $options['clientid']);
 
 		try
 		{
@@ -427,11 +427,10 @@ class PlgUserJoomla extends JPlugin
 	 *
 	 * @since   3.5
 	 */
-	private function logoutUserFromRedis($user, $options)
+	private function logoutUserSessionFromRedis($user, $options)
 	{
-		$ds = JFactory::getDso();
+		$ds             = JFactory::getDso();
 		$key4sessionuid = 'sessid-' . (int) $user['id'] . '-' . (int) $options['clientid'];
-		
 
 		try
 		{
