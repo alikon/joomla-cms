@@ -19,7 +19,7 @@ class ModStatusHelper
 	/**
 	 * The count of logged users from the Database.
 	 *
-	 * @admin   boolean  True if we want the backend user.
+	 * @param   $admin   boolean  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
@@ -51,7 +51,7 @@ class ModStatusHelper
 	/**
 	 * The count of logged users from the Redis Cache.
 	 *
-	 * @admin   boolean  True if we want the backend user.
+	 * @param   $admin   boolean  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
@@ -112,7 +112,7 @@ class ModStatusHelper
 	/**
 	 * The count of logged users.
 	 *
-	 * @admin   boolean  True if we want the backend user.
+	 * @param   $admin   boolean  True if we want the backend user.
 	 *
 	 * @return  integer  The user count
 	 *
