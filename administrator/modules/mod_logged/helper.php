@@ -54,6 +54,7 @@ abstract class ModLoggedHelper
 	 *
 	 * @return  mixed  An array of users, or false on error.
 	 *
+	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
 	public static function getListFromDb(&$params)
@@ -102,6 +103,7 @@ abstract class ModLoggedHelper
 	 *
 	 * @return  mixed  An array of users, or false on error.
 	 *
+	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
 	public static function getListFromFromRedis($params)
