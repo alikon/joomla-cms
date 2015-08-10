@@ -659,7 +659,7 @@ class JApplicationCms extends JApplicationWeb
 	 */
 	public function getUserState($key, $default = null)
 	{
-		$session = JFactory::getSession();
+		$session  = JFactory::getSession();
 		$registry = $session->get('registry');
 
 		if (!is_null($registry))
@@ -837,13 +837,15 @@ class JApplicationCms extends JApplicationWeb
 		// TODO: At some point we need to get away from having session data always in the db.
 		// Get the session handler from the configuration.
 		$handler = $this->get('session_handler', 'none');
-		$time = time();
+		$time    = time();
+
 		switch ($handler)
 		{
-	   		case 'database':
-	   		case 'none':
-	   				// Remove expired sessions from the database.
-					$db = JFactory::getDbo();	
+			case 'database':
+			case 'none':
+					// Remove expired sessions from the database.
+					$db = JFactory::getDbo();
+
 					if ($time % 2)
 					{
 						// The modulus introduces a little entropy, making the flushing less accurate
@@ -854,17 +856,14 @@ class JApplicationCms extends JApplicationWeb
 
 						$db->setQuery($query);
 						$db->execute();
-					}			
-	   			break;
-	   			
-	   		case 'redis':
-	   		  // pseudo cron task to clean SETS
-	   		  $this->purgeSets();
-	   			break;
-	   			
-	   		default:	
-	   		  $db = JFactory::getDbo();				
-	   			break;	
+					}		
+				break;
+			case 'redis':
+				// Pseudo cron task to clean SETS
+				$this->purgeSets();
+				break;
+			default:	
+				break;	
 		}
 					
 		if ($time % 2 || $session->isNew())			
@@ -901,7 +900,7 @@ class JApplicationCms extends JApplicationWeb
 	{
 		// Get the global JAuthentication object.
 		jimport('joomla.user.authentication');
-//jexit('cmslogin');
+
 		$authenticate = JAuthentication::getInstance();
 		$response = $authenticate->authenticate($credentials, $options);
 
@@ -1257,42 +1256,48 @@ class JApplicationCms extends JApplicationWeb
 
 		return $this->getBody();
 	}
+
+	/**
+	 * Pseudo cron task to clean SETS
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 * @throws  RuntimeException
+	 */
 	public function purgeSets()
 	{
 		$ds = JFactory::getDso();
+
 		try
 		{
 			$lista = $ds->smembers('utenti');
-		
 		}
 		catch (Exception $e)
 		{
-			throw new RuntimeException(JText::_('JERROR_SESSION_redis_destroy'));
-			
-			
-			return false;			
+			throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_DESTROY'));
+
+			return false;
 		}
-		
+
 		// Get the database connection object and verify its connected.
 		foreach ($lista as $elm)
 		{
 			try
 			{
 				$exist = $ds->ttl($elm);
-		
 			}
 			catch (Exception $e)
 			{
-				throw new RuntimeException(JText::_('JERROR_SESSION_redis_destroy'));					
+				throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_DESTROY'));
+
 				return false;			
 			}
-			
+
 			if ($exist == -1)
 			{
 				$ds->srem('utenti', $elm);	
- //jexit(var_dump($elm));				
 			}
-		}	
-		
-	}	
+		}
+	}
 }
