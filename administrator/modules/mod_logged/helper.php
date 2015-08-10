@@ -116,7 +116,7 @@ abstract class ModLoggedHelper
 		}
 		catch (Exception $e)
 		{
-			throw new RuntimeException(JText::_('JERROR_SESSION_redis_destroy'));
+			throw new RuntimeException(JText::_('JERROR_SESSION_REDIS_DESTROY'));
 
 			return false;
 		}
