@@ -35,10 +35,10 @@ abstract class ModLoggedHelper
 		{
 			case 'database':
 			case 'none':
-				$results = ModLoggedHelper::getListFromDb($params);
+				$results = $this->getListFromDb($params);
 				break;
 			case 'redis':
-				$results = ModLoggedHelper::getListFromFromRedis($params);
+				$results = $this->getListFromFromRedis($params);
 				break;
 			default:	   		  			
 				break;		
@@ -148,7 +148,10 @@ abstract class ModLoggedHelper
 					$results[$k]->logoutLink = JRoute::_('index.php?option=com_login&task=logout&uid=' . $result->userid . '&' . JSession::getFormToken() . '=1');
 				}
 
-				$results[$k]->name = $results[$k]->username;
+				if ($params->get('name', 1) == 0)
+				{
+					$results[$k]->name = $results[$k]->username;
+				}
 			}
 		}
 
