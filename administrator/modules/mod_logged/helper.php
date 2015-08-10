@@ -38,7 +38,7 @@ abstract class ModLoggedHelper
 				$results = $this->getListFromDb($params);
 				break;
 			case 'redis':
-				$results = $this->getListFromFromRedis($params);
+				$results = $this->getListFromRedis($params);
 				break;
 			default:	   		  			
 				break;		
@@ -106,7 +106,7 @@ abstract class ModLoggedHelper
 	 * @since   3.5
 	 * @throws  RuntimeException
 	 */
-	private function getListFromFromRedis($params)
+	private function getListFromRedis($params)
 	{
 		$ds      = JFactory::getDso();
 		$user    = JFactory::getUser();
