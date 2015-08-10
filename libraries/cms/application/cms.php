@@ -149,20 +149,7 @@ class JApplicationCms extends JApplicationWeb
 			$session->set('user', new JUser);
 		}
 	}
-	public function checkSession()
-	{
-		
-		//jexit($this->config->get('session_handler'));	
-		if ($this->config->get('session_handler')=='redis')
-		{
-			$this->checkSessionNoDB();
-		}
-		else
-		{
-			$this->checkSessionDB();
-			 
-		}
-	}		
+
 	/**
 	 * Checks the user session.
 	 *
@@ -171,77 +158,110 @@ class JApplicationCms extends JApplicationWeb
 	 *
 	 * @return  void
 	 *
-	 * @since   3.2
-	 * @throws  RuntimeException
+	 * @since   3.5
 	 */
-	public function checkSessionNoDB()
+	public function checkSession()
+	{
+		if ($this->config->get('session_handler') == 'redis')
+		{
+			$this->checkSessionNoDb();
+		}
+		else
+		{
+			$this->checkSessionDb();
+			 
+		}
+	}
+
+	/**
+	 * Checks the user session via Redis.
+	 *
+	 * If the session record doesn't exist, initialise it.
+	 * If session is new, create session variables
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 * @throws  Exception or RuntimeException
+	 */
+	public function checkSessionNoDb()
 	{ 
-		$ds = JFactory::getDso();
+		$ds      = JFactory::getDso();
 		$session = JFactory::getSession();
-		$user = JFactory::getUser();
-		//jexit(var_dump($ds));
+		$user    = JFactory::getUser();
+
 		try
 		{				
-			$exists = $ds->exists('sess-'.$session->getId());  
-			//var_dump($exists);      
-    	//
+			$exists = $ds->exists('sess-' . $session->getId());  
 		}
-		catch( Exception $e )
-			//catch (RuntimeException $e)
+		catch( Exception $e)
 		{
-			$exists=false;
-			//jexit(var_dump($exists));
+			$exists = false;
 			throw new Exception(JText::_('JERROR_SESSION_STARTUP'));
 		}
-		//jexit(var_dump('E:'.$exists)); 
+
 		if (!$exists)
 		{
 			if ($session->isNew())
 			{
-				$ds->delete('sess-'.$session->getId());  
-				$hash = array('client_id' => (int) $this->getClientId(), 'time' => (int) time() );
-			//	var_dump('NEW:'); 
-				
+				$ds->delete('sess-' . $session->getId());  
+				$hash = array(
+					'client_id' => (int) $this->getClientId(),
+					'time'      => (int) time(),
+				);
 			}
 			else
 			{
-			//	var_dump('OLD:'); 
-				$hash = array('client_id' => (int) $this->getClientId(), 
-				              'guest' => (int) $user->get('guest'), 
-				              'time' => (int) $session->get('session.timer.start'), 
-				              'userid' => (int) $user->get('id'),
-				              'username' => $user->get('username')
-				              );	
+				$hash = array(
+					'client_id' => (int) $this->getClientId(),
+					'guest'     => (int) $user->get('guest'),
+					'time'      => (int) $session->get('session.timer.start'),
+					'userid'    => (int) $user->get('id'),
+					'username'  => $user->get('username'),
+				);	
  
 			}
+
 			// If the insert failed, exit the application.
-			$key = 'sess-'.$session->getId();
- 
-			$key4sessionuid = 'sessid-'.(int) $user->get('id').'-'.(int) $this->getClientId();
-			$jsonValue = json_encode($hash);
-			 
-			$lifetime = (($this->config->get('lifetime')) ? $this->config->get('lifetime') * 60 : 900);
+			$key            = 'sess-' . $session->getId();
+ 			$key4sessionuid = 'sessid-' . (int) $user->get('id') . '-' . (int) $this->getClientId();
+			$jsonValue      = json_encode($hash);
+			$lifetime       = (($this->config->get('lifetime')) ? $this->config->get('lifetime') * 60 : 900);
+
 			try
 			{
-				$ds->setex( $key, $lifetime, $jsonValue );
-				
-					if ($user->get('id')>0)
-		     	{ 
-				     $ds->setex( $key4sessionuid, $lifetime, $key );
-				  }   
+				if (!$user->get('id') > 0)
+				{ 
+					$ds->setex($key4sessionuid, $lifetime, $key);
+				}
+				else
+				{
+					$ds->setex($key, $lifetime, $jsonValue);
+				}
 			}
 			catch (RuntimeException $e)
 			{
 				throw new RuntimeException(JText::_('JERROR_SESSION_STARTUP'));
 			}
-			//jexit(var_dump($ds->get($key).'cms:insrit'));
 		}
 	}
-	public function checkSessionDB()
+
+	/**
+	 * Checks the user session via Databse.
+	 *
+	 * If the session record doesn't exist, initialise it.
+	 * If session is new, create session variables
+	 *
+	 * @return  void
+	 *
+	 * @since   3.5
+	 * @throws  RuntimeException
+	 */
+	public function checkSessionDb()
 	{
-		$db = JFactory::getDbo();
+		$db      = JFactory::getDbo();
 		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$user    = JFactory::getUser();
 
 		$query = $db->getQuery(true)
 			->select($db->quoteName('session_id'))
