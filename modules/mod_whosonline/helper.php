@@ -33,10 +33,10 @@ class ModWhosonlineHelper
 		{
 			case 'database':
 			case 'none':
-				$results = $this->getOnlineCountFromDb();
+				$results = self::getOnlineCountFromDb();
 				break;
 			case 'redis':
-				$results = $this->getOnlineCountFromRedis();
+				$results = self::getOnlineCountFromRedis();
 				break;
 			default:
 				break;
@@ -55,10 +55,10 @@ class ModWhosonlineHelper
 		{
 			case 'database':
 			case 'none':
-				$results = $this->getOnlineUserNamesFromDb();
+				$results = self::getOnlineUserNamesFromDb();
 				break;
 			case 'redis':
-				$results = $this->getOnlineUserNamesFromRedis();
+				$results = self::getOnlineUserNamesFromRedis();
 				break;
 			default:
 				break;
@@ -74,7 +74,7 @@ class ModWhosonlineHelper
 	 *
 	 * @since   3.5
 	 **/
-	private function getOnlineCountFromRedis()
+	private static function getOnlineCountFromRedis()
 	{
 		$ds = JFactory::getDso();
 
@@ -112,7 +112,7 @@ class ModWhosonlineHelper
 	 *
 	 * @since   3.5
 	 **/
-	private function getOnlineCountFromDb()
+	private static function getOnlineCountFromDb()
 	{
 		$db = JFactory::getDbo();
 
@@ -170,7 +170,7 @@ class ModWhosonlineHelper
 	 *
 	 * @since   3.5
 	 **/
-	private function getOnlineUserNamesFromRedis($params)
+	private static function getOnlineUserNamesFromRedis($params)
 	{
 		$ds = JFactory::getDso();
 
@@ -193,7 +193,7 @@ class ModWhosonlineHelper
 	 *
 	 * @since   3.5
 	 **/
-	private function getOnlineUserNamesFromDb($params)
+	private static function getOnlineUserNamesFromDb($params)
 	{
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true)
@@ -235,12 +235,11 @@ class ModWhosonlineHelper
 	/**
 	 * Purge the List
 	 *
-	 *
 	 * @return  bolean  True on success
 	 *
 	 * @since   3.5
 	 **/
-	private function purgelist()
+	private static function purgelist()
 	{
 		$ds = JFactory::getDso();
 
