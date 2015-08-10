@@ -843,20 +843,20 @@ class JApplicationCms extends JApplicationWeb
 		{
 			case 'database':
 			case 'none':
-					// Remove expired sessions from the database.
-					$db = JFactory::getDbo();
+				// Remove expired sessions from the database.
+				$db = JFactory::getDbo();
 
-					if ($time % 2)
-					{
-						// The modulus introduces a little entropy, making the flushing less accurate
-						// but fires the query less than half the time.
-						$query = $db->getQuery(true)
-								->delete($db->quoteName('#__session'))
-								->where($db->quoteName('time') . ' < ' . $db->quote((int) ($time - $session->getExpire())));
+				if ($time % 2)
+				{
+					// The modulus introduces a little entropy, making the flushing less accurate
+					// but fires the query less than half the time.
+					$query = $db->getQuery(true)
+							->delete($db->quoteName('#__session'))
+							->where($db->quoteName('time') . ' < ' . $db->quote((int) ($time - $session->getExpire())));
 
-						$db->setQuery($query);
-						$db->execute();
-					}		
+					$db->setQuery($query)->execute();
+				}
+
 				break;
 			case 'redis':
 				// Pseudo cron task to clean SETS
