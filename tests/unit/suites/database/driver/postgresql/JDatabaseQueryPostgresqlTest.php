@@ -1207,4 +1207,42 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 			$this->_instance->dateAdd($date, $interval, $datePart)
 		);
 	}
+
+	/**
+	 * Data for the testDateSub test.
+	 *
+	 * @return  array
+	 *
+	 * @since   13.1
+	 */
+	public function seedDateSub()
+	{
+		return array(
+			// Elements: date, interval, datepart, expected
+			'Subtract date'		=> array('2008-12-31', '1', 'day', "timestamp 2008-12-31 - interval '1 day'"),
+			'Add date'			=> array('2008-12-31', '-1', 'day', "timestamp 2008-12-31 + interval '1 day'"),
+			'Subtract datetime'	=> array('2008-12-31 23:59:59', '1', 'day', "timestamp 2008-12-31 23:59:59 - interval '1 day'"),
+		);
+	}
+
+	/**
+	 * Tests the JDatabasePostgresqlQuery::DateSub method
+	 *
+	 * @param   datetime  $date      The date or datetime to subtract from.
+	 * @param   string    $interval  The maximum length of the text.
+	 * @param   string    $datePart  The part of the date to be subtracted from (such as day or micosecond).
+	 * @param   string    $expected  The expected result.
+	 *
+	 * @return  void
+	 *
+	 * @dataProvider  seedDateSub
+	 * @since   13.1
+	 */
+	public function testDateSub($date, $interval, $datePart, $expected)
+	{
+		$this->assertEquals(
+			$expected,
+			$this->_instance->dateSub($date, $interval, $datePart)
+		);
+	}
 }
