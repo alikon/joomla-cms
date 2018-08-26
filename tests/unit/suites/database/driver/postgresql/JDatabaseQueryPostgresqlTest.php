@@ -1213,7 +1213,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   13.1
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function seedDateSub()
 	{
@@ -1236,7 +1236,7 @@ class JDatabaseQueryPostgresqlTest extends TestCase
 	 * @return  void
 	 *
 	 * @dataProvider  seedDateSub
-	 * @since   13.1
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testDateSub($date, $interval, $datePart, $expected)
 	{

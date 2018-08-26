@@ -722,7 +722,7 @@ class JDatabaseQueryPostgresql extends JDatabaseQuery implements JDatabaseQueryL
 	 *
 	 * @return  string  The string with the appropriate sql for subtraction of dates
 	 *
-	 * @since   13.1
+	 * @since   __DEPLOY_VERSION__
 	 * @note    Not all drivers support all units. Check appropriate references
 	 * @link    http://www.postgresql.org/docs/9.0/static/functions-datetime.html.
 	 */

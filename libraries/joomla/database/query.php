@@ -1795,7 +1795,7 @@ abstract class JDatabaseQuery
 	 * @return  string  The string with the appropriate sql for subtraction of dates
 	 *
 	 * @link    http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-sub
-	 * @since   13.1
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function dateSub($date, $interval, $datePart)
 	{
