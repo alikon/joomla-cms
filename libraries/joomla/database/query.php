@@ -1778,7 +1778,7 @@ abstract class JDatabaseQuery
 	 */
 	public function dateAdd($date, $interval, $datePart)
 	{
-		return trim("DATE_ADD('" . $date . "', INTERVAL " . $interval . ' ' . $datePart . ')');
+		return trim('DATE_ADD(' . $date . ', INTERVAL ' . $interval . ' ' . $datePart . ')');
 	}
 
 	/**
@@ -1799,7 +1799,7 @@ abstract class JDatabaseQuery
 	 */
 	public function dateSub($date, $interval, $datePart)
 	{
-		return trim("DATE_SUB('" . $date . "', INTERVAL " . $interval . ' ' . $datePart . ')');
+		return trim('DATE_SUB(' . $date . ', INTERVAL ' . $interval . ' ' . $datePart . ')');
 	}
 
 	/**
