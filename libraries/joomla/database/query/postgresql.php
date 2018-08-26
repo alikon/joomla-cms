@@ -711,6 +711,34 @@ class JDatabaseQueryPostgresql extends JDatabaseQuery implements JDatabaseQueryL
 	}
 
 	/**
+	 * Subtract from the current date and time in Postgresql.
+	 * Usage:
+	 * $query->select($query->dateSub());
+	 * Prefixing the interval with a - (negative sign) will cause addition to be used.
+	 *
+	 * @param   datetime  $date      The date to subtract from
+	 * @param   string    $interval  The string representation of the appropriate number of units
+	 * @param   string    $datePart  The part of the date to perform the subtraction on
+	 *
+	 * @return  string  The string with the appropriate sql for subtraction of dates
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 * @note    Not all drivers support all units. Check appropriate references
+	 * @link    http://www.postgresql.org/docs/9.0/static/functions-datetime.html.
+	 */
+	public function dateSub($date, $interval, $datePart)
+	{
+		if (substr($interval, 0, 1) != '-')
+		{
+			return "timestamp " . $date . " - interval '" . $interval . " " . $datePart . "'";
+		}
+		else
+		{
+			return "timestamp " . $date . " + interval '" . ltrim($interval, '-') . " " . $datePart . "'";
+		}
+	}
+
+	/**
 	 * Return correct regexp operator for Postgresql.
 	 *
 	 * Ensure that the regexp operator is Postgresql compatible.
