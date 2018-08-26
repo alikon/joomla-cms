@@ -1778,7 +1778,28 @@ abstract class JDatabaseQuery
 	 */
 	public function dateAdd($date, $interval, $datePart)
 	{
-		return trim("DATE_ADD(" . $date . ", INTERVAL " . $interval . ' ' . $datePart . ')');
+		return trim("DATE_ADD('" . $date . "', INTERVAL " . $interval . ' ' . $datePart . ')');
+	}
+
+	/**
+	 * Subtract from the current date and time.
+	 * Usage:
+	 * $query->select($query->dateSub());
+	 * Prefixing the interval with a - (negative sign) will cause addition to be used.
+	 * Note: Not all drivers support all units.
+	 *
+	 * @param   mixed   $date      The date to subtract from. May be date or datetime
+	 * @param   string  $interval  The string representation of the appropriate number of units
+	 * @param   string  $datePart  The part of the date to perform the subtraction on
+	 *
+	 * @return  string  The string with the appropriate sql for subtraction of dates
+	 *
+	 * @link    http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-sub
+	 * @since   13.1
+	 */
+	public function dateSub($date, $interval, $datePart)
+	{
+		return trim("DATE_SUB('" . $date . "', INTERVAL " . $interval . ' ' . $datePart . ')');
 	}
 
 	/**
