@@ -422,7 +422,7 @@ class PlgSystemUpdatenotification extends JPlugin
 	 *
 	 * @param   array   $clearGroups  Bla bla
 	 * @param   string  $separator    Bla bla
-	 * @param   mixed   $callback     Bla bla
+	 * @param   mixed   $callback     Bla bla, array if used, boolean false if not used.
 	 *
 	 * @return  string  Bla bla
 	 *
