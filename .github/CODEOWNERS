@@ -7,7 +7,7 @@ plugins/fields/*  @laoneo
 plugins/systems/fields/*  @laoneo
 
 # Smart Search
-#administrator/components/com_finder/*
+#administrator/components/com_finder/* @Hackwar
 #components/com_finder/*
 #modules/mod_finder/*
 #plugins/content/finder/*
