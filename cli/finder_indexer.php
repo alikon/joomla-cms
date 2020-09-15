@@ -148,7 +148,7 @@ class FinderCli extends \Joomla\CMS\Application\CliApplication
 
 		// Print a blank line.
 		$this->out(Text::_('FINDER_CLI'));
-		$this->out('============================');
+		$this->out('===========================');
 
 		// Initialize the time value.
 		$this->time = microtime(true);
