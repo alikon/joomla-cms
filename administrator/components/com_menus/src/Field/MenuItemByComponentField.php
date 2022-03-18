@@ -7,7 +7,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Menus\Administrator\Field;
+\namespace Joomla\Component\Menus\Administrator\Field;
 
 defined('_JEXEC') or die;
 
@@ -43,7 +43,7 @@ class MenuItemByComponentField extends ListField
 	{
 		// Initialise variable.
 		$db      = Factory::getDbo();
-		$options = array();
+		$options = [];
 
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT ' . $db->quoteName('extensions.element'))
