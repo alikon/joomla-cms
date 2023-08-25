@@ -30,4 +30,19 @@ describe('Test that content categories API endpoint', () => {
         .its('title')
         .should('include', 'updated automated test content category'));
   });
+
+  it('can create a category with description', () => {
+    cy.api_post('/content/categories', { title: 'automated test content category', description: 'automated test content category description' })
+      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
+        .its('description')
+        .should('include', 'automated test content category description'));
+  });
+
+  it('can update a category with description', () => {
+    cy.db_createCategory({ title: 'automated test content category', extension: 'com_content' })
+      .then((id) => cy.api_patch(`/content/categories/${id}`, { description: 'updated automated test content category description' }))
+      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
+        .its('description')
+        .should('include', 'updated automated test content category description'));
+  });
 });
