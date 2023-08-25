@@ -17,32 +17,27 @@ describe('Test that banners categories API endpoint', () => {
   });
 
   it('can create a category', () => {
-    cy.api_post('/banners/categories', { title: 'automated test banner category' })
-      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
-        .its('title')
-        .should('include', 'automated test banner category'));
+   cy.api_post('/banners/categories', { title: 'automated test banner category', description: 'automated test banner category description' })
+    .then((response) => {
+      cy.wrap(response).its('body').its('data').its('attributes')
+       .its('title')
+       .should('include', 'automated test banner category');
+      cy.wrap(response).its('body').its('data').its('attributes')
+       .its('description')
+       .should('include', 'automated test banner category description');
+    })
   });
 
   it('can update a category', () => {
     cy.db_createCategory({ title: 'automated test banner category', extension: 'com_banners' })
-      .then((id) => cy.api_patch(`/banners/categories/${id}`, { title: 'updated automated test banner category' }))
-      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
-        .its('title')
-        .should('include', 'updated automated test banner category'));
-  });
-  
-  it('can create a category with description', () => {
-    cy.api_post('/banners/categories', { title: 'automated test banner category', description: 'automated test banner category description'})
-      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
-        .its('description')
-        .should('include', 'automated test banner category description'));
-  });
-
-  it('can update a category with description', () => {
-    cy.db_createCategory({ title: 'automated test banner category', description: 'automated test banner category description', extension: 'com_banners' })
-      .then((id) => cy.api_patch(`/banners/categories/${id}`, {description: 'updated automated test banner category description' }))
-      .then((response) => cy.wrap(response).its('body').its('data').its('attributes')
-        .its('description')
-        .should('include', 'updated automated test banner category description'));
+      .then((id) => cy.api_patch(`/banners/categories/${id}`, { title: 'updated automated test banner category', description: 'automated test banner category description' }))
+      .then((response) => {
+	    cy.wrap(response).its('body').its('data').its('attributes')
+         .its('title')
+         .should('include', 'updated automated test banner category');
+	    cy.wrap(response).its('body').its('data').its('attributes')
+         .its('description')
+         .should('include', 'automated test banner category description');
+      })
   });
 });
