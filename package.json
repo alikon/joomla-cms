@@ -47,7 +47,7 @@
     "codemirror": "^5.65.0",
     "cropperjs": "^1.5.12",
     "diff": "^5.0.0",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.4.1",
     "dragula": "^3.7.3",
     "focus-visible": "^5.2.0",
     "hotkeys-js": "^3.9.3",
