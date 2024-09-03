@@ -49,7 +49,7 @@
     "diff": "^5.2.0",
     "dotenv": "^16.0.3",
     "dragula": "^3.7.3",
-    "focus-visible": "^5.2.0",
+    "focus-visible": "^5.2.1",
     "hotkeys-js": "^3.9.3",
     "joomla-ui-custom-elements": "^0.2.0",
     "jquery": "^3.6.0",
