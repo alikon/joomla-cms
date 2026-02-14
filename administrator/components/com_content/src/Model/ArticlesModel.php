@@ -48,58 +48,33 @@ class ArticlesModel extends ListModel
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = [
-                'id',
-                'a.id',
-                'title',
-                'a.title',
-                'alias',
-                'a.alias',
-                'checked_out',
-                'a.checked_out',
-                'checked_out_time',
-                'a.checked_out_time',
-                'catid',
-                'a.catid',
-                'category_title',
-                'state',
-                'a.state',
-                'access',
-                'a.access',
-                'access_level',
-                'created',
-                'a.created',
-                'modified',
-                'a.modified',
-                'created_by',
-                'a.created_by',
-                'created_by_alias',
-                'a.created_by_alias',
-                'ordering',
-                'a.ordering',
-                'featured',
-                'a.featured',
-                'featured_up',
-                'fp.featured_up',
-                'featured_down',
-                'fp.featured_down',
-                'language',
-                'a.language',
-                'hits',
-                'a.hits',
-                'publish_up',
-                'a.publish_up',
-                'publish_down',
-                'a.publish_down',
-                'published',
-                'a.published',
+                'id', 'a.id',
+                'title', 'a.title',
+                'alias', 'a.alias',
+                'checked_out', 'a.checked_out',
+                'checked_out_time', 'a.checked_out_time',
+                'catid', 'a.catid', 'category_title',
+                'state', 'a.state',
+                'access', 'a.access', 'access_level',
+                'created', 'a.created',
+                'modified', 'a.modified',
+                'created_by', 'a.created_by',
+                'created_by_alias', 'a.created_by_alias',
+                'ordering', 'a.ordering',
+                'featured', 'a.featured',
+                'featured_up', 'fp.featured_up',
+                'featured_down', 'fp.featured_down',
+                'language', 'a.language',
+                'hits', 'a.hits',
+                'publish_up', 'a.publish_up',
+                'publish_down', 'a.publish_down',
+                'published', 'a.published',
                 'author_id',
                 'category_id',
                 'level',
                 'tag',
-                'rating_count',
-                'rating',
-                'stage',
-                'wa.stage_id',
+                'rating_count', 'rating',
+                'stage', 'wa.stage_id',
                 'ws.title',
                 'fp.ordering',
             ];
@@ -553,12 +528,6 @@ class ArticlesModel extends ListModel
 
         if ($tag && \is_array($tag)) {
             $tag         = ArrayHelper::toInteger($tag);
-            $includeNone = false;
-
-            if (\in_array(0, $tag)) {
-                $tag         = array_filter($tag);
-                $includeNone = true;
-            }
 
             $tagMode = $this->getState('filter.tag_mode', 'any');
 
@@ -581,6 +550,13 @@ class ArticlesModel extends ListModel
                 }
             } else {
                 // OR logic:
+                $includeNone = false;
+
+                if (\in_array(0, $tag)) {
+                    $tag         = array_filter($tag);
+                    $includeNone = true;
+                }
+
                 $subQuery = $db->createQuery()
                     ->select('DISTINCT ' . $db->quoteName('content_item_id'))
                     ->from($db->quoteName('#__contentitem_tag_map'))
