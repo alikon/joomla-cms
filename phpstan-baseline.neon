@@ -7477,6 +7477,14 @@ parameters:
 			path: administrator/components/com_users/src/Model/LevelsModel.php
 
 		-
+    		message: '''
+        		#^Call to deprecated method shouldUseExceptions\(\) of class Joomla\\CMS\\MVC\\Model\\BaseModel:\n7\.0$#
+      		'''
+      		identifier: method.deprecated
+      		count: 2
+      		path: administrator/components/com_users/src/Model/LevelModel.php
+
+		-
 			message: '''
 				#^Call to deprecated method getLanguage\(\) of class Joomla\\CMS\\Factory\:
 				4\.3 will be removed in 6\.0
