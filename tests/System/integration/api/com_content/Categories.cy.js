@@ -51,6 +51,7 @@ describe('Test that content categories API endpoint', () => {
 
   it('can delete a category', () => {
     cy.db_createCategory({ title: 'automated test content category', extension: 'com_content', published: -2 })
-      .then((category) => cy.api_delete(`/content/categories/${category.id}`));
+      .then((category) => cy.api_delete(`/content/categories/${category}`))
+      .then((response) => cy.wrap(response).its('status').should('equal', 204));
   });
 });
