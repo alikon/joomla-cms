@@ -318,62 +318,25 @@ Cypress.Commands.add('db_createCategory', (categoryData) => {
     modified_time: '2023-01-01 20:00:00',
   };
 
-  const finalCategory = { ...defaultCategoryOptions, ...categoryData };
-
-  // Create space for rgt/lft in the #__categories nested set
+  // Create space for rgt and lft
   return cy.task('queryDB', 'SELECT rgt FROM #__categories WHERE id = 1').then((myrgt) => {
     const lftVal = myrgt[0].rgt;
     const rgtVal = myrgt[0].rgt + 1;
 
-    finalCategory.lft = lftVal;
-    finalCategory.rgt = rgtVal;
+    const finalCategory = {
+      ...defaultCategoryOptions,
+      lft: lftVal,
+      rgt: rgtVal,
+      ...categoryData,
+    };
 
     return cy.task('queryDB', `UPDATE #__categories SET rgt = rgt + 2 WHERE rgt >= '${lftVal}'`)
       .then(() => cy.task('queryDB', `UPDATE #__categories SET lft = lft + 2 WHERE lft > '${rgtVal}'`))
-      // Insert the category row (asset_id gets patched afterwards, like Joomla core does)
       .then(() => cy.task('queryDB', createInsertQuery('categories', finalCategory)))
-      .then((catInfo) => {
-        const categoryId = catInfo.insertId;
-
-        // Find the extension's root asset  
-        return cy.task('queryDB', `SELECT id, rgt FROM #__assets WHERE name = '${finalCategory.extension}'`)
-          .then((parentAsset) => {
-            if (!parentAsset || !parentAsset.length) {
-              cy.log(`WARNING: no root asset found for extension '${finalCategory.extension}', falling back to Root asset (id=1)`);
-              return cy.task('queryDB', 'SELECT id, rgt FROM #__assets WHERE id = 1');
-            }
-          return parentAsset;
-        })
-        .then((parentAsset) => {
-            const parentAssetId = parentAsset[0].id;
-            const assetLft = parentAsset[0].rgt;
-            const assetRgt = parentAsset[0].rgt + 1;
-
-            const assetData = {
-              parent_id: parentAssetId,
-              lft: assetLft,
-              rgt: assetRgt,
-              level: 2,
-              name: `${finalCategory.extension}.category.${categoryId}`,
-              title: finalCategory.title,
-              rules: '{}',
-            };
-
-            // Create space for the new asset in the #__assets nested set
-            return cy.task('queryDB', `UPDATE #__assets SET rgt = rgt + 2 WHERE rgt >= '${assetLft}'`)
-              .then(() => cy.task('queryDB', `UPDATE #__assets SET lft = lft + 2 WHERE lft > '${assetRgt}'`))
-              .then(() => cy.task('queryDB', createInsertQuery('assets', assetData)))
-              .then((assetInfo) => {
-                const assetId = assetInfo.insertId;
-
-                // Patch the category row with the real asset_id
-                return cy.task('queryDB', `UPDATE #__categories SET asset_id = ${assetId} WHERE id = ${categoryId}`)
-                  .then(() => categoryId);
-              });
-          });
-      });
+      .then((info) => info.insertId);
   });
 });
+
 /**
  * Delete a category item in the database with the given title.
  *
@@ -381,32 +344,11 @@ Cypress.Commands.add('db_createCategory', (categoryData) => {
  *
  */
 Cypress.Commands.add('db_deleteCategory', (categoryTitle) => {
-  cy.task('queryDB', `SELECT lft, rgt, asset_id, (rgt - lft) + 1 AS width FROM #__categories WHERE title = '${categoryTitle.title}'`).then((record) => {
+  cy.task('queryDB', `SELECT lft, rgt, (rgt - lft) +1 AS width FROM #__categories WHERE title = '${categoryTitle.title}'`).then((record) => {
     if (record.length > 0) {
-      const { lft, rgt, width, asset_id: assetId } = record[0];
-
-      // Clean up the corresponding subtree in #__assets, if one was linked
-      const assetCleanup = assetId
-        ? cy.task('queryDB', `SELECT lft, rgt, (rgt - lft) + 1 AS width FROM #__assets WHERE id = ${assetId}`)
-            .then((assetRecord) => {
-              if (!assetRecord.length) {
-                return null;
-              }
-              const assetLft = assetRecord[0].lft;
-              const assetRgt = assetRecord[0].rgt;
-              const assetWidth = assetRecord[0].width;
-
-              return cy.task('queryDB', `DELETE FROM #__assets WHERE lft BETWEEN '${assetLft}' AND '${assetRgt}'`)
-                .then(() => cy.task('queryDB', `UPDATE #__assets SET lft = lft - '${assetWidth}' WHERE lft > '${assetRgt}'`))
-                .then(() => cy.task('queryDB', `UPDATE #__assets SET rgt = rgt - '${assetWidth}' WHERE rgt > '${assetRgt}'`));
-            })
-        : cy.wrap(null);
-
-      // Clean up the category subtree itself
-      return assetCleanup
-        .then(() => cy.task('queryDB', `DELETE FROM #__categories WHERE lft BETWEEN '${lft}' AND '${rgt}'`))
-        .then(() => cy.task('queryDB', `UPDATE #__categories SET lft = lft - '${width}' WHERE lft > '${rgt}'`))
-        .then(() => cy.task('queryDB', `UPDATE #__categories SET rgt = rgt - '${width}' WHERE rgt > '${rgt}'`));
+      cy.task('queryDB', `DELETE FROM #__categories WHERE lft BETWEEN '${record[0].lft}' AND '${record[0].rgt}'`)
+        .then(() => cy.task('queryDB', `UPDATE #__categories SET lft = lft - '${record[0].width}' WHERE lft > '${record[0].rgt}'`))
+        .then(() => cy.task('queryDB', `UPDATE #__categories SET rgt = rgt - '${record[0].width}' WHERE rgt > '${record[0].rgt}'`));
     }
   });
 });
