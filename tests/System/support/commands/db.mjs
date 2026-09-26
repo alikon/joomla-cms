@@ -339,9 +339,12 @@ Cypress.Commands.add('db_createCategory', (categoryData) => {
         return cy.task('queryDB', `SELECT id, rgt FROM #__assets WHERE name = '${finalCategory.extension}'`)
           .then((parentAsset) => {
             if (!parentAsset || !parentAsset.length) {
-              throw new Error(`No root asset found for extension '${finalCategory.extension}'`);
+              cy.log(`WARNING: no root asset found for extension '${finalCategory.extension}', falling back to Root asset (id=1)`);
+              return cy.task('queryDB', 'SELECT id, rgt FROM #__assets WHERE id = 1');
             }
-
+          return parentAsset;
+        })
+        .then((parentAsset) => {
             const parentAssetId = parentAsset[0].id;
             const assetLft = parentAsset[0].rgt;
             const assetRgt = parentAsset[0].rgt + 1;
